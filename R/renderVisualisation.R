@@ -43,18 +43,30 @@ visualizationTypes <- tabsetPanel(
   tabPanel(
     "Histogram",
     fluidRow(
-      box(title = "Inputs", width = 3, status = "primary", solidHeader = TRUE,
-        selectInput("x3", "x axis of Histogram:" ,"Select a field"),
-        # sliderInput("bins", "2.Select the number of BINs for the histogram", min=10, max=200, value=100),
+        box(title = "Inputs",width = 3, status = "primary", solidHeader = TRUE,
+            selectInput("x3", "x axis of Histogram:" ,"Select a field"),
+            # sliderInput("bins", "2.Select the number of BINs for the histogram", min=10, max=200, value=100),
+            
+            actionButton(
+              inputId = "submit_loc",
+              label = "Plot")
+            ),
+      
+        box(title = "Histogram", width = 9, status = "primary", solidHeader = TRUE,
+            plotlyOutput("myHist")
         
-        actionButton(
-          inputId = "submit_loc",
-          label = "Plot")
-        ),
-      box(title = "Histogram", width = 9, status = "primary", solidHeader = TRUE,
-        plotlyOutput("myHist")
-        )
+            )
+      ),
+    fluidRow(
+      box(title = "Inputs",width = 3, status = "primary", solidHeader = TRUE,
+          selectInput("x3", "x axis of Histogram:" ,"Select a field"),
+          # sliderInput("bins", "2.Select the number of BINs for the histogram", min=10, max=200, value=100),
+          
+          actionButton(
+            inputId = "submit_loc",
+            label = "Plot")
       )
+    )
   ),
   tabPanel("Plot_2","Another Plot"),
   tabPanel("Plot_3","Guess what, another plot :)")
