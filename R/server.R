@@ -18,5 +18,5 @@ server <- function(input, output, session) {
  
   renderfile(input=input,output=output)  
   renderVisualisation(input=input,output=output, session=session) 
-  renderAnalysisTypes(input=input,output=output, session=session)
+  # renderAnalysisTypes(input=input,output=output, session=session)
 }

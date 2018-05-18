@@ -43,30 +43,29 @@ visualizationTypes <- tabsetPanel(
   tabPanel(
     "Histogram",
     fluidRow(
-        box(title = "Inputs",width = 3, status = "primary", solidHeader = TRUE,
+      column(width = 3,
+        box(title = "Inputs", width = NULL, status = "primary", solidHeader = TRUE,
             selectInput("x3", "x axis of Histogram:" ,"Select a field"),
             # sliderInput("bins", "2.Select the number of BINs for the histogram", min=10, max=200, value=100),
             
             actionButton(
               inputId = "submit_loc",
               label = "Plot")
-            ),
+        ),
+        box(title = "Description", width = NULL, status = "primary", solidHeader = TRUE,
+            div(HTML(
+              "<h1>Data Distributions</h1>",
+              "<p>Here, the type of analysis carried out is frequency distributuion. THis shows how often each different value in a dataset occurs.</p>",
+              "<p>A histogram is used to show the data distributions</p>"))
+        )),
       
-        box(title = "Histogram", width = 9, status = "primary", solidHeader = TRUE,
+      column(
+        width = 9,
+        box(title = "Histogram", width = NULL, status = "primary", solidHeader = TRUE,
             plotlyOutput("myHist")
+        ))
         
-            )
-      ),
-    fluidRow(
-      box(title = "Inputs",width = 3, status = "primary", solidHeader = TRUE,
-          selectInput("x3", "x axis of Histogram:" ,"Select a field"),
-          # sliderInput("bins", "2.Select the number of BINs for the histogram", min=10, max=200, value=100),
-          
-          actionButton(
-            inputId = "submit_loc",
-            label = "Plot")
       )
-    )
   ),
   tabPanel("Plot_2","Another Plot"),
   tabPanel("Plot_3","Guess what, another plot :)")
