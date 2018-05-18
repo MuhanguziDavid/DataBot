@@ -1,6 +1,9 @@
 library(shiny)
 library(shinydashboard)
-
+library(plotly)
+library(ggplot2)
+library(DT)
+library(RMySQL)
 #UI Page where the user interfcae begins
 #UI is created in dashboard format
 #Dashboard main elements are header,sidebar and body
