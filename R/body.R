@@ -1,7 +1,6 @@
 source("createAccount.R")
 source("loginpage.R")
 source("renderVisualisation.R")
-source("analysisTypes.R")
 
 body <- dashboardBody(
   tags$link(rel = "stylesheet", type = "text/css", href = "css/animate.min.css"),
@@ -14,7 +13,6 @@ body <- dashboardBody(
     tabItem(tabName = "home",includeHTML("HomePage/index.html")),
     tabItem(tabName = "analysis", h3("Analysis of data from ETAs")),
     tabItem(tabName = "viewData", uiOutput("contents")),
-    tabItem(tabName = "analysisTypes", analysisTypes),
     tabItem(tabName = "visualisations", uiOutput("visualizationOutput")),
     tabItem(tabName = "prediction", h4("Prediction of data from ETAs")),
     tabItem(tabName = "predictionData", "Data to be predicted"),

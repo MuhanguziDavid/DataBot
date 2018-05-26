@@ -8,7 +8,6 @@ source("retrieveUser.R")
 source("observer.R")
 source("observers.R")
 source("renderVisualisation.R")
-source("analysisTypes.R")
 options(shiny.maxRequestSize = 9*1024^2)
 
 server <- function(input, output, session) {
