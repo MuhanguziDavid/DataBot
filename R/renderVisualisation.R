@@ -1,4 +1,3 @@
-source("analysisTypes.R")
 
 renderVisualisation<-function(input, output, session){
   
@@ -21,7 +20,8 @@ renderVisualisation<-function(input, output, session){
       
       output$myHist <- renderPlotly({
         # histogram()
-        plot <- plot_ly (data3, x = ~get(input$x3), type = "histogram" )
+        plot <- plot_ly (data3, x = ~get(input$x3), histfunc="sum", type = "histogram" ) %>%
+          layout(yaxis=list(type='linear'))
         plot
       })
       

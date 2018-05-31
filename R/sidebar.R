@@ -1,6 +1,5 @@
 source("fileInput.R")
 source("renderVisualisation.R")
-source("analysisTypes.R")
 
 sidebar <- dashboardSidebar(
   tags$head(tags$script(HTML("
@@ -28,7 +27,6 @@ sidebar <- dashboardSidebar(
     menuItem("Home", tabName = "home", icon = icon("dashboard")),
     menuItem("Analysis", tabName = "analysis", icon = icon("bar-chart-o"),
              menuSubItem("View Data", tabName = "viewData"),
-             menuSubItem("Analysis Types", tabName = "analysisTypes"),
              menuSubItem("Visualisations", tabName = "visualisations")),
     
     menuItem("Prediction", tabName = "prediction", icon = icon("th"),
