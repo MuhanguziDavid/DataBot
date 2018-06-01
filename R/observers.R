@@ -10,12 +10,3 @@ observeEvent(input$file, {
                  selected = "viewData")
 })
 
-#from analysisTypes.R
-observeEvent(
-  eventExpr = input[["toHistogram"]],
-  handlerExpr = {
-    
-    # updateTabItems(session, "tabs", selected = "visualisations")
-    updateTabsetPanel(session, "plotTabs", selected = "Plot_2")
-    
-  })
