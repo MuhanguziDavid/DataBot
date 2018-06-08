@@ -3,14 +3,7 @@ source("loginpage.R")
 source("renderVisualisation.R")
 
 body <- dashboardBody(
-  tags$link(rel = "stylesheet", type = "text/css", href = "css/animate.min.css"),
-  tags$link(rel = "stylesheet", type = "text/css", href = "css/bootstrap.min.css"),
-  tags$link(rel = "stylesheet", type = "text/css", href = "css/bootstrap-theme.min.css"),
-  tags$link(rel = "stylesheet", type = "text/css", href = "css/font-awesome.min.css"),
-  tags$link(rel = "stylesheet", type = "text/css", href = "css/overwrite.css"),
-  tags$link(rel = "stylesheet", type = "text/css", href = "css/style.css"),
   tabItems(
-    tabItem(tabName = "home",includeHTML("HomePage/index.html")),
     tabItem(tabName = "analysis", h3("Analysis of data from ETAs")),
     tabItem(tabName = "viewData", uiOutput("contents")),
     tabItem(tabName = "visualisations", uiOutput("visualizationOutput")),

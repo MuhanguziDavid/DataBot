@@ -192,13 +192,13 @@ predictionTypes <- tabsetPanel(
       column(
         width = 6,
         box(title = "Prediction Plot", width = NULL, status = "primary", solidHeader = TRUE,
-            plotlyOutput("predictionPlot_arima")
+            withSpinner(plotlyOutput("predictionPlot_arima"))
         )
       ),
       column(
         width = 6,
         box(title = "Forecasts", width = NULL, status = "primary", solidHeader = TRUE,
-            plotlyOutput("forecastsPlot_arima")
+            withSpinner(plotlyOutput("forecastsPlot_arima"))
         )
       )
     )
@@ -225,13 +225,13 @@ predictionTypes <- tabsetPanel(
       column(
         width = 6,
         box(title = "Prediction Plot", width = NULL, status = "primary", solidHeader = TRUE,
-            plotlyOutput("predictionPlot_holts")
+            withSpinner(plotlyOutput("predictionPlot_holts"))
         )
       ),
       column(
         width = 6,
         box(title = "Forecasts", width = NULL, status = "primary", solidHeader = TRUE,
-            plotlyOutput("forecastsPlot_holts")
+            withSpinner(plotlyOutput("forecastsPlot_holts"))
         )
       )
     )
@@ -258,13 +258,13 @@ predictionTypes <- tabsetPanel(
       column(
         width = 6,
         box(title = "Prediction Plot", width = NULL, status = "primary", solidHeader = TRUE,
-            plotlyOutput("predictionPlot_ma")
+            withSpinner(plotlyOutput("predictionPlot_ma"))
         )
       ),
       column(
         width = 6,
         box(title = "Forecasts", width = NULL, status = "primary", solidHeader = TRUE,
-            plotlyOutput("forecastsPlot_ma")
+            withSpinner(plotlyOutput("forecastsPlot_ma"))
         )
       )
     )

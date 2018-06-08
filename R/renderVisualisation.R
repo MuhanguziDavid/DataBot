@@ -1,25 +1,41 @@
-renderVisualisation<-function(input, output, session){
-  
+renderVisualisation <- function(input, output, session){
+
   observeEvent(
     eventExpr = input$file,
     handlerExpr = {
       
-      infile3 <- input$file
-      if(is.null(infile3)){return()}
-      dirtyData3 <- read.csv(file = infile3$datapath, header = TRUE, sep = ",")
-      noNaData<-na.omit(dirtyData3)
+      getFileInput <- input$file
+      if(is.null(getFileInput)){return()}
+      uncleanedData <- read.csv(file = getFileInput$datapath, header = TRUE, sep = ",")
+      cleanData <- na.omit(uncleanedData)
+      cleanDataHead <- head(cleanData,30)
+
+      numericData <- cleanDataHead[,sapply(cleanData,is.numeric)]
+      cleanDataHead$newDataHead <- as.POSIXct(strptime(as.character(cleanDataHead$timestamp), "%d/%m/%Y"))
+      print(cleanDataHead$newDataHead)
+      cleanDataHead$formatedTimeStamp <- format(cleanDataHead$newDataHead, "%Y-%m-%d")
       
-      #select only numeric columns to use for the plot
-      data3 <- noNaData[,sapply(noNaData,is.numeric)]
+      output$Hist <- renderPlotly({
+        plot <- plot_ly (data = numericData, x = ~get(input$x3), type = "histogram")
+        plot
+      })
       
-      #updates the list of columns to be selected for the plot
-      #updateSelectInput(session, "x3", choices = names(data3))
+      output$candleStick <- renderPlotly({
+        
+        plot <- cleanDataHead %>% 
+          plot_ly(x=~formatedTimeStamp, type = "candlestick",
+                           open = ~open, close = ~close,
+                           high = ~high, low = ~low) %>%
+          layout(title = "CandleStick Chart")
+        plot
+      })
       
-      xVarName <- input$x3
-      
-      output$myHist <- renderPlotly({
-        # histogram()
-        plot <- plot_ly (data = data3, x = ~get(input$x3), type = "histogram")
+      output$timeSeries <- renderPlotly({
+        plot <- cleanDataHead %>% 
+          plot_ly(x=~formatedTimeStamp, type = "ohlc",
+                  open = ~open, close = ~close,
+                  high = ~high, low = ~low) %>%
+          layout(title = "OHLC Chart")
         plot
       })
       
@@ -30,12 +46,12 @@ renderVisualisation<-function(input, output, session){
           fluidRow(
             column(width = 3,
                    box(title = "Inputs", width = NULL, status = "primary", solidHeader = TRUE,
-                       selectInput(inputId = "x3", label = "x axis of Histogram:" ,choices = names(data3))
+                       selectInput(inputId = "x3", label = "x axis of Histogram:" ,choices = names(numericData))
                       
                    ),
                    box(title = "Description", width = NULL, status = "primary", solidHeader = TRUE,
                        div(HTML(
-                         "<h1>Data Distribu tions</h1>",
+                         "<h1>Data Distributions</h1>",
                          "<p>Here, the type of analysis carried out is frequency distributuion. THis shows how often each different value in a dataset occurs.</p>",
                          "<p>A histogram is used to show the data distributions</p>"))
                    )),
@@ -43,13 +59,57 @@ renderVisualisation<-function(input, output, session){
             column(
               width = 9,
               box(title = "Histogram", width = NULL, status = "primary", solidHeader = TRUE,
-                  plotlyOutput("myHist")
+                  withSpinner(plotlyOutput("Hist"))
               ))
             
           )
         ),
-        tabPanel("Plot_2","Another Plot"),
-        tabPanel("Plot_3","Guess what, another plot :)")
+        tabPanel(
+          "Candle Stick",
+          fluidRow(
+            column(width = 3,
+                   box(title = "Inputs", width = NULL, status = "primary", solidHeader = TRUE,
+                       selectInput(inputId = "x3", label = "x axis of the Candle Stick:" ,choices = names(cleanDataHead))
+                       
+                   ),
+                   box(title = "Description", width = NULL, status = "primary", solidHeader = TRUE,
+                       div(HTML(
+                         "<h1>Data Distributions</h1>",
+                         "<p>Here, the type of analysis carried out is frequency distributuion. THis shows how often each different value in a dataset occurs.</p>",
+                         "<p>A histogram is used to show the data distributions</p>"))
+                   )),
+            
+            column(
+              width = 9,
+              box(title = "Candle Stick", width = NULL, status = "primary", solidHeader = TRUE,
+                  withSpinner(plotlyOutput("candleStick"))
+              ))
+            
+            )
+          ),
+        tabPanel(
+          "Time Series",
+          fluidRow(
+            column(width = 3,
+                   box(title = "Inputs", width = NULL, status = "primary", solidHeader = TRUE,
+                       selectInput(inputId = "x3", label = "x axis of the Time Series:" ,choices = names(cleanDataHead))
+                       
+                   ),
+                   box(title = "Description", width = NULL, status = "primary", solidHeader = TRUE,
+                       div(HTML(
+                         "<h1>Data Distributions</h1>",
+                         "<p>Here, the type of analysis carried out is frequency distributuion. THis shows how often each different value in a dataset occurs.</p>",
+                         "<p>A histogram is used to show the data distributions</p>"))
+                   )),
+            
+            column(
+              width = 9,
+              box(title = "Time Series", width = NULL, status = "primary", solidHeader = TRUE,
+                  withSpinner(plotlyOutput("timeSeries"))
+              ))
+            
+            )
+          )
       )
       #function to be used in body.R so as to output the plot
       output$visualizationOutput<-renderUI({
