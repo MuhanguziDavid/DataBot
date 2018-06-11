@@ -1,5 +1,3 @@
-
-
 observeEvent(input$submit, {
   updateTabsetPanel(session, "createAccountTabs",
                     selected = "instructions")
