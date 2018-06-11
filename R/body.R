@@ -15,7 +15,7 @@ body <- dashboardBody(
     tabItem(tabName = "viewData", uiOutput("contents")),
     tabItem(tabName = "visualisations", uiOutput("visualizationOutput")),
     tabItem(tabName = "prediction", h4("Prediction of data from ETAs")),
-    tabItem(tabName = "predictionData", "Data to be predicted"),
+    tabItem(tabName = "predictionData", uiOutput("predictionDataOutput")),
     tabItem(tabName = "predictionTypes", uiOutput("predictionOutput")),
     tabItem(tabName = "createAccount",createAccount),
     tabItem(tabName = "login",loginpage)

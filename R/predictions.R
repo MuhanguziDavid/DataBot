@@ -6,10 +6,12 @@ renderPrediction<-function(input, output, session){
     eventExpr = input[["submit_arima"]],
     handlerExpr = {
       
-      infile3 <- input$file
-      if(is.null(infile3)){return()}
-      dirtyData3 <- read.csv(file = infile3$datapath, header = TRUE, sep = ",")
-      cleanData<-na.omit(dirtyData3)
+      # infile3 <- input$file
+      # if(is.null(infile3)){return()}
+      # dirtyData3 <- read.csv(file = infile3$datapath, header = TRUE, sep = ",")
+      infile3 <- predictionData
+      dirtyData3 <- na.omit(infile3)
+      cleanData <- dirtyData3
       
       #train the model
       cleanData$timestamp <- cleanData[order(as.Date(cleanData$timestamp, format="%m/%d/%Y")),]
@@ -48,6 +50,12 @@ renderPrediction<-function(input, output, session){
                       color = I("gray80"), name = "80% confidence") %>%
           add_lines(x = time(forecastedValues_arima$mean), y = forecastedValues_arima$mean, color = I("blue"), name = "prediction")
         forecast_arima
+      })
+      
+      output$fileName_arima<-renderTable({
+        if(is.null(data())){return()}
+        inputFile <- input$file
+        inputFile$name
       })
       
     })
@@ -99,6 +107,12 @@ renderPrediction<-function(input, output, session){
                       color = I("gray80"), name = "80% confidence") %>%
           add_lines(x = time(forecastedValues_holts$mean), y = forecastedValues_holts$mean, color = I("blue"), name = "prediction")
         forecast_holts
+      })
+      
+      output$fileName_holts<-renderTable({
+        if(is.null(data())){return()}
+        inputFile <- input$file
+        inputFile$name
       })
       
     })
@@ -156,16 +170,24 @@ renderPrediction<-function(input, output, session){
         forecast_ma
       })
       
+      output$fileName_ma<-renderTable({
+        if(is.null(data())){return()}
+        inputFile <- input$file
+        inputFile$name
+      })
+      
     })
   
-  
-  #function to be used in body.R so as to output the plot
-  output$predictionOutput<-renderUI({
-    if(is.null(input$file))
-      h5("No Uploaded Data")
-    else
+  observeEvent(input$submitlogin,{
+    #function to be used in body.R so as to output the plot
+    output$predictionOutput<-renderUI({
+      # if(is.null(userName))
+      #   h5("Please login")
+      # else
       predictionTypes
+    })
   })
+  
   
 }
 
@@ -176,10 +198,15 @@ predictionTypes <- tabsetPanel(
     fluidRow(
       column(
         width = 6,
-        box(title = "Inputs", width = NULL, status = "primary", solidHeader = TRUE,
+        box(title = "ARIMA Prediction", width = NULL, status = "primary", solidHeader = TRUE,
           actionButton(
             inputId = "submit_arima",
-            label = "Predict"))
+            label = "Predict"),
+          tableOutput("fileName_arima"),
+          div(HTML(
+            "<h4>NB:</h4>",
+            "<p>Predicting data for the next 5 days</p>"))
+        )
       ),
       column(
         width = 6,
@@ -209,10 +236,15 @@ predictionTypes <- tabsetPanel(
     fluidRow(
       column(
         width = 6,
-        box(title = "Inputs", width = NULL, status = "primary", solidHeader = TRUE,
-            actionButton(
-              inputId = "submit_holts",
-              label = "Predict"))
+        box(title = "Holts Exponential Predictions", width = NULL, status = "primary", solidHeader = TRUE,
+          actionButton(
+            inputId = "submit_holts",
+            label = "Predict"),
+          tableOutput("fileName_holts"),
+          div(HTML(
+            "<h4>NB:</h4>",
+            "<p>Predicting data for the next 5 days</p>"))
+        )
       ),
       column(
         width = 6,
@@ -242,10 +274,15 @@ predictionTypes <- tabsetPanel(
     fluidRow(
       column(
         width = 6,
-        box(title = "Inputs", width = NULL, status = "primary", solidHeader = TRUE,
-            actionButton(
-              inputId = "submit_ma",
-              label = "Predict"))
+        box(title = "Seasonal Adjustments Prediction", width = NULL, status = "primary", solidHeader = TRUE,
+          actionButton(
+            inputId = "submit_ma",
+            label = "Predict"),
+          tableOutput("fileName_ma"),
+          div(HTML(
+            "<h4>NB:</h4>",
+            "<p>Predicting data for the next 5 days</p>"))
+        )
       ),
       column(
         width = 6,

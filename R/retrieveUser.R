@@ -6,6 +6,7 @@ options(mysql = list(
 ))
 databaseName <- "databot"
 table <- "eta"
+userName
 
 retrieveUser <- function(username,password) {
   # Connect to the database
@@ -18,8 +19,11 @@ retrieveUser <- function(username,password) {
   user <- dbGetQuery(db, query)
   
   dbDisconnect(db)
-  if(length(user$id)>=1)
+  if(length(user$id)>=1){
+    userName <<- user$username
     return(user)
+    # assign("userName", "mset", envir = .GlobalEnv)
+  }
   else
   return(NULL)
 }

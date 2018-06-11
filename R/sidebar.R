@@ -21,9 +21,6 @@ sidebar <- dashboardSidebar(
     id ="tabs",
     #fileiput variable from the fileinput.R file
     fileinput,
-    # checkboxInput(inputId = "header",label = "header",value = FALSE),
-    # checkboxInput(inputId = "stringAsFactors",label = "stringAsFactors",value = FALSE),
-    # radioButtons(inputId = "sep",label = "Separator",choices = c(Comma=",",Semicolon=";",Tab="\t",Space=" " ),selected = ","),
     menuItem("Home", tabName = "home", icon = icon("dashboard")),
     menuItem("Analysis", tabName = "analysis", icon = icon("bar-chart-o"),
              menuSubItem("View Data", tabName = "viewData"),

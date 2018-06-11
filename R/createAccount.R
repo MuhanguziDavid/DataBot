@@ -10,10 +10,13 @@ credentials<- mainPanel(
 # )
 instructions<-verticalLayout(
   HTML(
-      "<h1>Instructions here</h1>"
+    paste(c("<h1>Created Account as: ",paste(textOutput("username")),"</h1>"))
     ),
-  textOutput("username"),
-   textOutput("password")
+  HTML(
+    "<h2><br/>Instructions on integration</h2>",
+    "<p>Please acquire the DataBot API and install it to be able to send data to the DataBot database</p>"
+  )
+  
  
 )
 createAccount<-tabsetPanel(

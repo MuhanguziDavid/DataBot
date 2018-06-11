@@ -15,8 +15,24 @@ observer<-function(input,output,session){
   
   
   observeEvent(input$file, {
-    updateTabItems(session, "tabs",
-                   selected = "viewData")
+    updateTabItems(
+      session, "tabs",
+      selected = "viewData")
+    
+    infile3 <- input$file
+    if(is.null(infile3)){return()}
+    dirtyData3 <- read.csv(file = infile3$datapath, header = TRUE, sep = ",")
+    cleanData<-na.omit(dirtyData3)
+    
+    cleanData$timestamp <- cleanData[order(as.Date(cleanData$timestamp, format="%m/%d/%Y")),]
+    traindata <- cleanData$timestamp
+    trainSet$eta_id <- "2"
+    trainSet$company_id <- "1"
+    trainSet$dividend_amount <- NULL
+    trainSet$split_coefficient <- NULL
+    
+    insertTrainSet(trainSet)
+    
   })
   
   observeEvent(input$submitlogin,{
@@ -28,8 +44,14 @@ observer<-function(input,output,session){
       }
     else{
     session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "login"))
-      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "createAccount"))
+    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "createAccount"))
+    
     session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "logout"))  
+    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "viewData"))
+    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "visualisations"))
+    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "predictionData"))
+    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "predictionTypes"))
+    
     updateTabsetPanel(session,"tabs",selected = "home")
     }
     
@@ -37,10 +59,18 @@ observer<-function(input,output,session){
   
   observeEvent(input$tabs,{
     if(input$tabs=="logout"){
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "login"))
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "createAccount"))  
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "logout"))
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "login"))
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "createAccount"))  
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "logout"))
+      
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "viewData"))
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "visualisations"))
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "predictionData"))
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "predictionTypes"))
+      
+      updateTabItems(
+        session, "tabs",
+        selected = "home")
     }
-    
   })
 }
