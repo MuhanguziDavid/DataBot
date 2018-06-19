@@ -6,7 +6,6 @@ options(mysql = list(
 ))
 databaseName <- "databot"
 table <- "eta"
-userName
 
 retrieveUser <- function(username,password) {
   # Connect to the database
