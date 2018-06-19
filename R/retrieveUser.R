@@ -17,12 +17,23 @@ retrieveUser <- function(username,password) {
   # Submit the fetch query and disconnect
   user <- dbGetQuery(db, query)
   
-  dbDisconnect(db)
+ 
   if(length(user$id)>=1){
     userName <<- user$username
     return(user)
     # assign("userName", "mset", envir = .GlobalEnv)
   }
-  else
-  return(NULL)
+  else{
+    query<-paste(c("Select* from eta_user where username='",paste(username),"'and password='",paste(password),"'"),collapse = "")
+    # Submit the fetch query and disconnect
+    user <- dbGetQuery(db, query)
+    if(length(user$id)>=1){
+      query<-paste(c("Select* from eta where id='",paste(user$eta_id),"'"),collapse = "")
+      eta <- dbGetQuery(db, query)
+      userName <<- eta$username
+      print(userName)
+    }
+    
+  }
+  dbDisconnect(db)
 }
