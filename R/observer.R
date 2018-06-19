@@ -25,9 +25,11 @@ observer<-function(input,output,session){
     cleanData<-na.omit(dirtyData3)
     
     cleanData$timestamp <- cleanData[order(as.Date(cleanData$timestamp, format="%m/%d/%Y")),]
-    traindata <- cleanData$timestamp
-    trainSet$eta_id <- "2"
-    trainSet$company_id <- "1"
+    trainSet <- cleanData$timestamp
+    # trainSet$eta_id <- "2"
+    trainSet$username <- userName
+    # trainSet$company_id <- "1"
+    trainSet$ticker_Symbol <- infile3$name
     trainSet$dividend_amount <- NULL
     trainSet$split_coefficient <- NULL
     

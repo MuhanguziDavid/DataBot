@@ -7,17 +7,20 @@ options(mysql = list(
 databaseName <- "databot"
 table <- "eta_data"
 
-insertTrainSet <- function(trainset) {
+insertTrainSet <- function(trainSet) {
   # Connect to the database
   db <- dbConnect(MySQL(), dbname = databaseName, host = options()$mysql$host, 
                   port = options()$mysql$port, user = options()$mysql$user, 
                   password = options()$mysql$password)
   
   # query <- paste(c("INSERT INTO eta(username,password) VALUES('",paste(username),"','",paste(password),"')"),collapse = "")
-  dbWriteTable(db, name="eta_data", value=trainSet, 
-               overwrite=TRUE, 
-               append=FALSE,
-               row.names=FALSE)
   # dbGetQuery(db, query)
+  dbWriteTable(db, name="eta_data", value=trainSet, 
+               overwrite=FALSE, 
+               append=TRUE,
+               row.names=FALSE)
+  query <- paste(c("SELECT timestamp, open, high, low, close, adjusted_close, volume, username, ticker_Symbol FROM eta_data GROUP  BY timestamp, username, ticker_Symbol"),collapse = "")
+  mergeRecords <- dbGetQuery(db, query)
   dbDisconnect(db)
+  mergeRecords
 }

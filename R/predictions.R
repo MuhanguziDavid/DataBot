@@ -54,8 +54,9 @@ renderPrediction<-function(input, output, session){
       
       output$fileName_arima<-renderTable({
         if(is.null(data())){return()}
-        inputFile <- input$file
-        inputFile$name
+        # inputFile <- input$file
+        # inputFile$name
+        toString(input$selectedCompanyName)
       })
       
     })
@@ -65,10 +66,9 @@ renderPrediction<-function(input, output, session){
     eventExpr = input[["submit_holts"]],
     handlerExpr = {
       
-      infile3 <- input$file
-      if(is.null(infile3)){return()}
-      dirtyData3 <- read.csv(file = infile3$datapath, header = TRUE, sep = ",")
-      cleanData<-na.omit(dirtyData3)
+      infile3 <- predictionData
+      dirtyData3 <- na.omit(infile3)
+      cleanData <- dirtyData3
       
       #train the model
       cleanData$timestamp <- cleanData[order(as.Date(cleanData$timestamp, format="%m/%d/%Y")),]
@@ -122,10 +122,9 @@ renderPrediction<-function(input, output, session){
     eventExpr = input[["submit_ma"]],
     handlerExpr = {
       
-      infile3 <- input$file
-      if(is.null(infile3)){return()}
-      dirtyData3 <- read.csv(file = infile3$datapath, header = TRUE, sep = ",")
-      cleanData<-na.omit(dirtyData3)
+      infile3 <- predictionData
+      dirtyData3 <- na.omit(infile3)
+      cleanData <- dirtyData3
       
       #train the model
       cleanData$timestamp <- cleanData[order(as.Date(cleanData$timestamp, format="%m/%d/%Y")),]

@@ -1,4 +1,3 @@
-# source(retrieveUser())
 
 renderPredictionData<-function(input,output){
   options(mysql = list(
@@ -15,7 +14,8 @@ renderPredictionData<-function(input,output){
   # retrievePredictionData(eta, CompanyId)
   
   observeEvent(input$submitlogin,{
-      retrievePredictionData <- function() {
+    
+      retrieveCompanyNames <- function() {
         # Connect to the database
         db <- dbConnect(MySQL(), dbname = databaseName, host = options()$mysql$host,
                         port = options()$mysql$port, user = options()$mysql$user,
@@ -23,6 +23,21 @@ renderPredictionData<-function(input,output){
         
         # query<-paste(c("Select* from eta_data where username='",paste(userName),"'and ticker_Symbol='",paste(theCompanyId),"'"),collapse = "")
         query<-paste(c("SELECT DISTINCT ticker_Symbol FROM eta_data WHERE username='",paste(userName),"'"),collapse = "")
+        companyNames <- dbGetQuery(db, query)
+        
+        dbDisconnect(db)
+        companyNames <<- companyNames
+        return(companyNames)
+      }
+      
+      retrievePredictionData <- function() {
+        # Connect to the database
+        db <- dbConnect(MySQL(), dbname = databaseName, host = options()$mysql$host,
+                        port = options()$mysql$port, user = options()$mysql$user,
+                        password = options()$mysql$password)
+        
+        query<-paste(c("Select* from eta_data where username='",paste(userName),"'and ticker_Symbol='",paste((toString(input$selectedCompanyName))),"'"),collapse = "")
+        # query<-paste(c("SELECT DISTINCT ticker_Symbol FROM eta_data WHERE username='",paste(userName),"'"),collapse = "")
         predictionData <- dbGetQuery(db, query)
         
         dbDisconnect(db)
@@ -45,7 +60,16 @@ renderPredictionData<-function(input,output){
             id = "dataTabs",
             tabPanel(
               "Prediction Data",
-              dataTableOutput("predictionDataTable")),
+              fluidRow(
+                column(
+                  width = 3,
+                  box(title = "Inputs", width = NULL, status = "primary", solidHeader = TRUE,
+                      selectInput(inputId = "selectedCompanyName", label = "Choose company:" ,choices = retrieveCompanyNames()$ticker_Symbol)))),
+              fluidRow(
+                column(
+                  width = 12,
+                  box(title = "Company Data", width = NULL, status = "primary", solidHeader = TRUE,
+                      dataTableOutput("predictionDataTable"))))),
             tabPanel("Data"))
       })
     })
