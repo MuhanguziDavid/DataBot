@@ -9,6 +9,10 @@ table <- "eta"
 
 retrieveUser <- function(username,password) {
   # Connect to the database
+  for (con in dbListConnections(MySQL())){
+    dbDisconnect(con)
+  }
+  
   db <- dbConnect(MySQL(), dbname = databaseName, host = options()$mysql$host,
                   port = options()$mysql$port, user = options()$mysql$user,
                   password = options()$mysql$password)

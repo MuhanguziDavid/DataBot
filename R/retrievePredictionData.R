@@ -13,7 +13,7 @@ renderPredictionData<-function(input,output){
   
   # retrievePredictionData(eta, CompanyId)
   
-  observeEvent(input$submitlogin,{
+  observeEvent(c(input$submitlogin,input$save_to_database),{
     
       retrieveCompanyNames <- function() {
         # Connect to the database

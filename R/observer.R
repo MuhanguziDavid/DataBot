@@ -15,6 +15,12 @@ observer<-function(input,output,session){
   
   
   observeEvent(input$file, {
+    output$confirmInsert<-renderUI({
+      verticalLayout(
+        HTML(
+          ""))
+    })
+    
     updateTabItems(
       session, "tabs",
       selected = "viewData")
@@ -61,6 +67,8 @@ observer<-function(input,output,session){
         })
       }
     else{
+      updateTextInput(session, "usernamelogin", value = "")
+      updateTextInput(session, "passwordlogin", value = "")
     session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "login"))
     session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "createAccount"))
     
