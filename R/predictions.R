@@ -54,9 +54,7 @@ renderPrediction<-function(input, output, session){
       
       output$fileName_arima<-renderTable({
         if(is.null(data())){return()}
-        # inputFile <- input$file
-        # inputFile$name
-        toString(input$selectedCompanyName)
+        predictionData$ticker_Symbol[1]
       })
       
     })
@@ -111,8 +109,7 @@ renderPrediction<-function(input, output, session){
       
       output$fileName_holts<-renderTable({
         if(is.null(data())){return()}
-        inputFile <- input$file
-        inputFile$name
+        predictionData$ticker_Symbol[1]
       })
       
     })
@@ -146,8 +143,6 @@ renderPrediction<-function(input, output, session){
       })
       
       output$predictionPlot_ma <- renderPlotly({
-        # plot <- plot.ts(forecastedValues_ma)
-        # plot
         plot_ma <- plot_ly() %>%
           add_lines(x = time(trainset_ts), y = trainset, 
                     color = I("black"), name = "observed") %>%
@@ -166,13 +161,12 @@ renderPrediction<-function(input, output, session){
           add_ribbons(x = time(forecastedValues_ma$mean), ymin = forecastedValues_ma$lower[, 1], ymax = forecastedValues_ma$upper[, 1],
                       color = I("gray80"), name = "80% confidence") %>%
           add_lines(x = time(forecastedValues_ma$mean), y = forecastedValues_ma$mean, color = I("blue"), name = "prediction")
-        forecast_ma
+        withSpinner(forecast_ma)
       })
       
       output$fileName_ma<-renderTable({
         if(is.null(data())){return()}
-        inputFile <- input$file
-        inputFile$name
+        predictionData$ticker_Symbol[1]
       })
       
     })

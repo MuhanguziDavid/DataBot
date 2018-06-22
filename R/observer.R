@@ -18,24 +18,40 @@ observer<-function(input,output,session){
     updateTabItems(
       session, "tabs",
       selected = "viewData")
-    
-    infile3 <- input$file
-    if(is.null(infile3)){return()}
-    dirtyData3 <- read.csv(file = infile3$datapath, header = TRUE, sep = ",")
-    cleanData<-na.omit(dirtyData3)
-    
-    cleanData$timestamp <- cleanData[order(as.Date(cleanData$timestamp, format="%m/%d/%Y")),]
-    trainSet <- cleanData$timestamp
-    # trainSet$eta_id <- "2"
-    trainSet$username <- userName
-    # trainSet$company_id <- "1"
-    trainSet$ticker_Symbol <- infile3$name
-    trainSet$dividend_amount <- NULL
-    trainSet$split_coefficient <- NULL
-    
-    insertTrainSet(trainSet)
-    
   })
+  
+  observeEvent(
+    eventExpr = input[["save_to_database"]],
+    handlerExpr = {
+      infile3 <- input$file
+      if(is.null(infile3)){return()}
+      dirtyData3 <- read.csv(file = infile3$datapath, header = TRUE, sep = ",")
+      cleanData<-na.omit(dirtyData3)
+      
+      cleanData$timestamp <- cleanData[order(as.Date(cleanData$timestamp, format="%m/%d/%Y")),]
+      trainSet <- cleanData$timestamp
+      # trainSet$eta_id <- "2"
+      trainSet$username <- userName
+      # trainSet$company_id <- "1"
+      trainSet$ticker_Symbol <- infile3$name
+      trainSet$dividend_amount <- NULL
+      trainSet$split_coefficient <- NULL
+      
+      if (isTRUE(insertTrainSet(trainSet))){
+        output$confirmInsert<-renderUI({
+          verticalLayout(
+            HTML(
+              "<p>File Saved</p>"))
+        })
+      }
+      else{
+        output$confirmInsert<-renderUI({
+          verticalLayout(
+            HTML(
+              "<p>File not saved. Please login and try again</p>"))
+        })
+      }
+    })
   
   observeEvent(input$submitlogin,{
     if(is.null(retrieveUser(input$usernamelogin,input$passwordlogin))){
@@ -49,8 +65,6 @@ observer<-function(input,output,session){
     session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "createAccount"))
     
     session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "logout"))  
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "viewData"))
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "visualisations"))
     session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "predictionData"))
     session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "predictionTypes"))
     
@@ -61,12 +75,11 @@ observer<-function(input,output,session){
   
   observeEvent(input$tabs,{
     if(input$tabs=="logout"){
+      userName <<- NULL
       session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "login"))
       session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "createAccount"))  
       session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "logout"))
       
-      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "viewData"))
-      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "visualisations"))
       session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "predictionData"))
       session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "predictionTypes"))
       

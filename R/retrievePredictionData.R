@@ -69,8 +69,7 @@ renderPredictionData<-function(input,output){
                 column(
                   width = 12,
                   box(title = "Company Data", width = NULL, status = "primary", solidHeader = TRUE,
-                      dataTableOutput("predictionDataTable"))))),
-            tabPanel("Data"))
+                      dataTableOutput("predictionDataTable"))))))
       })
     })
       

@@ -17,11 +17,25 @@ renderfile<-function(input,output){
     if(is.null(data())){return()}
     data()
   })
+  
   output$contents<-renderUI({
     if(is.null(data()))
       h5("No Uploaded Data")
     else
-      tabsetPanel(id = "dataTabs",tabPanel("About",tableOutput("filedf")),tabPanel("Data",dataTableOutput("table")),tabPanel("Summary",dataTableOutput("summary")))
+      tabsetPanel(
+        id = "dataTabs",
+        tabPanel(
+          "About",
+          tableOutput("filedf"),
+          actionButton(
+            inputId = "save_to_database",
+            label = "Save to Database"),
+          uiOutput("confirmInsert")),
+        
+        tabPanel("Data",
+                 dataTableOutput("table")),
+        tabPanel("Summary",
+                 dataTableOutput("summary")))
   })
   
 }

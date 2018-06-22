@@ -8,6 +8,9 @@ databaseName <- "databot"
 table <- "eta_data"
 
 insertTrainSet <- function(trainSet) {
+  if (is.null(userName)){
+    return(NULL)
+  }
   # Connect to the database
   db <- dbConnect(MySQL(), dbname = databaseName, host = options()$mysql$host, 
                   port = options()$mysql$port, user = options()$mysql$user, 
@@ -23,4 +26,5 @@ insertTrainSet <- function(trainSet) {
   mergeRecords <- dbGetQuery(db, query)
   dbDisconnect(db)
   mergeRecords
+  return(TRUE)
 }

@@ -21,7 +21,12 @@ options(shiny.maxRequestSize = 9*1024^2)
 server <- function(input, output, session) {
   
   session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "logout"))
+  session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "predictionData"))
+  session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "predictionTypes"))
   observer(input = input,output = output,session = session)
+  
+  #set the login check to null
+  userName <<- NULL
  
   renderfile(input=input,output=output)  
   renderVisualisation(input=input,output=output, session=session) 
