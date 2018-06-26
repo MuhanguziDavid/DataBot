@@ -22,7 +22,7 @@ insertTrainSet <- function(trainSet) {
                overwrite=FALSE, 
                append=TRUE,
                row.names=FALSE)
-  query <- paste(c("SELECT timestamp, open, high, low, close, adjusted_close, volume, username, ticker_Symbol FROM eta_data GROUP  BY timestamp, username, ticker_Symbol"),collapse = "")
+  query <- paste(c("SELECT id, timestamp, open, high, low, close, adjusted_close, volume, username, ticker_Symbol FROM eta_data GROUP  BY timestamp, username, ticker_Symbol"),collapse = "")
   mergeRecords <- dbGetQuery(db, query)
   dbDisconnect(db)
   mergeRecords

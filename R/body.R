@@ -5,6 +5,7 @@ source("renderVisualisation.R")
 
 body <- dashboardBody(
   tabItems(
+    # tabItem(tabName = "home",includeHTML("index.html")),
     tabItem(tabName = "home", h1("The Home Page")),
     tabItem(tabName = "analysis", h3("Analysis of data from ETAs")),
     tabItem(tabName = "viewData", uiOutput("contents")),

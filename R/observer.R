@@ -15,6 +15,9 @@ observer<-function(input,output,session){
   
   
   observeEvent(input$file, {
+    dataUploaded <<- 1
+    renderfile(input = input,output = output)
+    renderVisualisation(input=input,output=output, session=session)
     output$confirmInsert<-renderUI({
       verticalLayout(
         HTML(
@@ -27,9 +30,24 @@ observer<-function(input,output,session){
   })
   
   observeEvent(
+    eventExpr = input[["analyze_db_data"]],
+    handlerExpr = {
+    dataUploaded <<- NULL
+    renderfile(input = input,output = output)
+    renderVisualisation(input=input,output=output, session=session) 
+  })
+  
+  observeEvent(
+    eventExpr = input[["selectedCompanyName_analysis"]],
+    handlerExpr = {
+      renderVisualisation(input=input,output=output, session=session)
+    })
+  
+  observeEvent(
     eventExpr = input[["save_to_database"]],
     handlerExpr = {
       infile3 <- input$file
+      uploadedFile <<- infile3
       if(is.null(infile3)){return()}
       dirtyData3 <- read.csv(file = infile3$datapath, header = TRUE, sep = ",")
       cleanData<-na.omit(dirtyData3)
@@ -67,16 +85,19 @@ observer<-function(input,output,session){
         })
       }
     else{
+      loginStatus <<- TRUE
+      renderfile(input = input,output = output)
+      renderVisualisation(input=input,output=output, session=session)
       updateTextInput(session, "usernamelogin", value = "")
       updateTextInput(session, "passwordlogin", value = "")
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "login"))
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "createAccount"))
-    
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "logout"))  
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "predictionData"))
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "predictionTypes"))
-    
-    updateTabsetPanel(session,"tabs",selected = "home")
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "login"))
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "createAccount"))
+      
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "logout"))  
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "predictionData"))
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "predictionTypes"))
+      
+      updateTabsetPanel(session,"tabs",selected = "home")
     }
     
   })
@@ -84,6 +105,8 @@ observer<-function(input,output,session){
   observeEvent(input$tabs,{
     if(input$tabs=="logout"){
       userName <<- NULL
+      loginStatus <<- FALSE
+      renderfile(input = input,output = output)
       session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "login"))
       session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "createAccount"))  
       session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "logout"))

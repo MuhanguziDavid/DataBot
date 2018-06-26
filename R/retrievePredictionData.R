@@ -30,6 +30,7 @@ renderPredictionData<-function(input,output){
         return(companyNames)
       }
       
+      #data table for predicitons
       retrievePredictionData <- function() {
         # Connect to the database
         db <- dbConnect(MySQL(), dbname = databaseName, host = options()$mysql$host,
@@ -45,11 +46,33 @@ renderPredictionData<-function(input,output){
         return(predictionData)
       }
       
-      # predictionData_df <- retrievePredictionData()
+      #data table for analysis
+      retrieveAnalysisData <- function() {
+        # Connect to the database
+        db <- dbConnect(MySQL(), dbname = databaseName, host = options()$mysql$host,
+                        port = options()$mysql$port, user = options()$mysql$user,
+                        password = options()$mysql$password)
+        
+        query<-paste(c("Select* from eta_data where username='",paste(userName),"'and ticker_Symbol='",paste((toString(input$selectedCompanyName_analysis))),"'"),collapse = "")
+        # query<-paste(c("SELECT DISTINCT ticker_Symbol FROM eta_data WHERE username='",paste(userName),"'"),collapse = "")
+        analysisData <- dbGetQuery(db, query)
+        
+        dbDisconnect(db)
+        analysisData <<- analysisData
+        # renderVisualisation(input=input,output=output, session=session)
+        return(analysisData)
+      }
       
+      #table with values from DB to be used for predicitons
       output$predictionDataTable<-renderDataTable({
-        if(is.null(data())){return()}
+        # if(is.null(data())){return()}
         retrievePredictionData()
+      })
+      
+      #table with values from DB to be used for analysis
+      output$analysisDataTable_DB<-renderDataTable({
+        # if(is.null(data())){return()}
+        retrieveAnalysisData()
       })
       
       output$predictionDataOutput<-renderUI({

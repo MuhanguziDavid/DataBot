@@ -10,4 +10,4 @@ menu<-dropdownMenu(type = "tasks", badgeStatus = "success",
                       "Server deployment"
              )
 )
-header <- dashboardHeader(title = "DataBot",menu)
+header <- dashboardHeader(title = "DataBot 2.0",menu)
