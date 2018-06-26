@@ -1,3 +1,5 @@
+source("retrievePredictionData.R")
+
 renderfile<-function(input,output){
   data<-reactive({
     file1 <- input$file
@@ -18,12 +20,37 @@ renderfile<-function(input,output){
     data()
   })
   
+  dataUpload <- reactive({
+    dataUploaded <<- data()
+  })
+  
+  
   output$contents<-renderUI({
-    if(is.null(data()))
-      h5("No Uploaded Data")
-    else
+    if(is.null(data())){
+      if(is.null(userName)){
+        h5("No Uploaded Data")
+      }
+      else{
+        tabsetPanel(
+          id = "dataTabsFromDB",
+          tabPanel(
+            "Analysis Data",
+            fluidRow(
+              column(
+                width = 3,
+                box(title = "Inputs", width = NULL, status = "primary", solidHeader = TRUE,
+                    selectInput(inputId = "selectedCompanyName", label = "Choose company:" ,choices = retrieveCompanyNames()$ticker_Symbol)))),
+            fluidRow(
+              column(
+                width = 12,
+                box(title = "Company Data", width = NULL, status = "primary", solidHeader = TRUE,
+                    dataTableOutput("analysisDataTable_DB"))))))
+      }
+    }
+      
+    else {
       tabsetPanel(
-        id = "dataTabs",
+        id = "dataTabsDirect",
         tabPanel(
           "About",
           tableOutput("filedf"),
@@ -36,6 +63,7 @@ renderfile<-function(input,output){
                  dataTableOutput("table")),
         tabPanel("Summary",
                  dataTableOutput("summary")))
+    }
   })
   
 }

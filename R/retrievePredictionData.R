@@ -45,10 +45,15 @@ renderPredictionData<-function(input,output){
         return(predictionData)
       }
       
-      # predictionData_df <- retrievePredictionData()
-      
+      #table with values from DB to be used for predicitons
       output$predictionDataTable<-renderDataTable({
-        if(is.null(data())){return()}
+        # if(is.null(data())){return()}
+        retrievePredictionData()
+      })
+      
+      #table with values from DB to be used for analysis
+      output$analysisDataTable_DB<-renderDataTable({
+        # if(is.null(data())){return()}
         retrievePredictionData()
       })
       

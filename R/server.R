@@ -27,6 +27,7 @@ server <- function(input, output, session) {
   
   #set the login check to null
   userName <<- NULL
+  loginStatus <<- FALSE
  
   renderfile(input=input,output=output)  
   renderVisualisation(input=input,output=output, session=session) 

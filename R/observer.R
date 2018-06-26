@@ -67,16 +67,18 @@ observer<-function(input,output,session){
         })
       }
     else{
+      loginStatus <<- TRUE
+      renderfile(input = input,output = output)
       updateTextInput(session, "usernamelogin", value = "")
       updateTextInput(session, "passwordlogin", value = "")
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "login"))
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "createAccount"))
-    
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "logout"))  
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "predictionData"))
-    session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "predictionTypes"))
-    
-    updateTabsetPanel(session,"tabs",selected = "home")
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "login"))
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "createAccount"))
+      
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "logout"))  
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "predictionData"))
+      session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "predictionTypes"))
+      
+      updateTabsetPanel(session,"tabs",selected = "home")
     }
     
   })
@@ -84,6 +86,8 @@ observer<-function(input,output,session){
   observeEvent(input$tabs,{
     if(input$tabs=="logout"){
       userName <<- NULL
+      loginStatus <<- FALSE
+      renderfile(input = input,output = output)
       session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "login"))
       session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "display", tabName = "createAccount"))  
       session$sendCustomMessage(type = "manipulateMenuItem", message = list(action = "hide", tabName = "logout"))
