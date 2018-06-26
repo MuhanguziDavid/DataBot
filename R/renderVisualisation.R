@@ -1,40 +1,32 @@
-# source("renderfile.R")
 
 renderVisualisation <- function(input, output, session){
-  renderfile(input = input,output = output)
+  # renderfile(input = input,output = output)
 
   observeEvent(c(input$submitlogin, input$file),
     handlerExpr = {
-      # if(is.null(dataUploaded)){
-      #   if(is.null(userName)){
-      #     h5("No Uploaded Data")
-      #   }
-      #   else{
-      #     infile3 <- predictionData
-      #     dirtyData3 <- na.omit(infile3)
-      #     cleanData <- dirtyData3
-      #     cleanDataHead <- head(cleanData,500)
-      #     numericData <- cleanDataHead[,sapply(cleanData,is.numeric)]
-      #     cleanDataHead$timestamp <- format(as.POSIXct(strptime(as.character(cleanDataHead$timestamp), "%m/%d/%Y")), "%y-%b-%d")
-      #   }
-      # }
-      # else{
-      #   getFileInput <- input$file
-      #   if(is.null(getFileInput)){return()}
-      #   uncleanedData <- read.csv(file = getFileInput$datapath, header = TRUE, sep = ",")
-      #   cleanData <- na.omit(uncleanedData)
-      #   cleanDataHead <- head(cleanData,500)
-      #   numericData <- cleanDataHead[,sapply(cleanData,is.numeric)]
-      #   cleanDataHead$timestamp <- format(as.POSIXct(strptime(as.character(cleanDataHead$timestamp), "%m/%d/%Y")), "%y-%b-%d")
-      # }
+      if(is.null(dataUploaded)){
+        if(is.null(userName)){
+          h5("No Uploaded Data")
+        }
+        else{
+          infile3 <- analysisData
+          dirtyData3 <- na.omit(infile3)
+          cleanData <- dirtyData3
+          cleanDataHead <- head(cleanData,500)
+          numericData <- cleanDataHead[,sapply(cleanData,is.numeric)]
+          cleanDataHead$timestamp <- format(as.POSIXct(strptime(as.character(cleanDataHead$timestamp), "%m/%d/%Y")), "%y-%b-%d")
+        }
+      }
+      else{
+        getFileInput <- input$file
+        if(is.null(getFileInput)){return()}
+        uncleanedData <- read.csv(file = getFileInput$datapath, header = TRUE, sep = ",")
+        cleanData <- na.omit(uncleanedData)
+        cleanDataHead <- head(cleanData,500)
+        numericData <- cleanDataHead[,sapply(cleanData,is.numeric)]
+        cleanDataHead$timestamp <- format(as.POSIXct(strptime(as.character(cleanDataHead$timestamp), "%m/%d/%Y")), "%y-%b-%d")
+      }
       
-      getFileInput <- input$file
-      if(is.null(getFileInput)){return()}
-      uncleanedData <- read.csv(file = getFileInput$datapath, header = TRUE, sep = ",")
-      cleanData <- na.omit(uncleanedData)
-      cleanDataHead <- head(cleanData,500)
-      numericData <- cleanDataHead[,sapply(cleanData,is.numeric)]
-      cleanDataHead$timestamp <- format(as.POSIXct(strptime(as.character(cleanDataHead$timestamp), "%m/%d/%Y")), "%y-%b-%d")
       xAxisLabel <- input$x3
       #print(xAxisLabel)
       
@@ -72,6 +64,15 @@ renderVisualisation <- function(input, output, session){
             ))
         plot
       })
+      
+      output$fileName_analysis<-renderTable({
+        if(is.null(dataUploaded)){
+          analysisData$ticker_Symbol[1]
+        }
+        else{
+          getFileInput$name
+        }
+      })
    
       visualizationTypes <- tabsetPanel(
         id = "plotTabs",
@@ -80,8 +81,8 @@ renderVisualisation <- function(input, output, session){
           fluidRow(
             column(width = 3,
                    box(title = "Inputs", width = NULL, status = "primary", solidHeader = TRUE,
+                       tableOutput("fileName_analysis"),
                        selectInput(inputId = "x3", label = "x axis of Histogram:" ,choices = names(numericData))
-                      
                    ),
                    box(title = "Description", width = NULL, status = "primary", solidHeader = TRUE,
                        div(HTML(
@@ -103,6 +104,7 @@ renderVisualisation <- function(input, output, session){
           fluidRow(
             column(width = 3,
                    box(title = "Inputs", width = NULL, status = "primary", solidHeader = TRUE,
+                       tableOutput("fileName_analysis"),
                        h5("X: Date"),
                        h5("y: Open, High, Low, close")
                    ),
@@ -128,6 +130,7 @@ renderVisualisation <- function(input, output, session){
           fluidRow(
             column(width = 3,
                    box(title = "Inputs", width = NULL, status = "primary", solidHeader = TRUE,
+                       tableOutput("fileName_analysis"),
                        h5("X: Date"),
                        h5("y: Open, High, Low, close")
                    ),
@@ -151,12 +154,20 @@ renderVisualisation <- function(input, output, session){
       )
       #function to be used in body.R so as to output the plot
       output$visualizationOutput<-renderUI({
-        if(is.null(data()))
-          h5("No Uploaded Data")
-        else
+        if(is.null(dataUploaded)){
+          if(is.null(userName)){
+            h5("No Uploaded Data")
+          }
+          else{
+            visualizationTypes
+            # h5("logged in database data")
+          }
+        }
+        else{
           visualizationTypes
+          # h5("uploaded data")
+        }
       })
       
     })
 }
-

@@ -26,7 +26,7 @@ renderfile<-function(input,output){
   
   
   output$contents<-renderUI({
-    if(is.null(data())){
+    if(is.null(dataUploaded)){
       if(is.null(userName)){
         h5("No Uploaded Data")
       }
@@ -39,7 +39,7 @@ renderfile<-function(input,output){
               column(
                 width = 3,
                 box(title = "Inputs", width = NULL, status = "primary", solidHeader = TRUE,
-                    selectInput(inputId = "selectedCompanyName", label = "Choose company:" ,choices = retrieveCompanyNames()$ticker_Symbol)))),
+                    selectInput(inputId = "selectedCompanyName_analysis", label = "Choose company:" ,choices = retrieveCompanyNames()$ticker_Symbol)))),
             fluidRow(
               column(
                 width = 12,
@@ -54,9 +54,14 @@ renderfile<-function(input,output){
         tabPanel(
           "About",
           tableOutput("filedf"),
-          actionButton(
-            inputId = "save_to_database",
-            label = "Save to Database"),
+          fluidRow(
+            actionButton(
+              inputId = "save_to_database",
+              label = "Save to Database"),
+            actionButton(
+              inputId = "analyze_db_data",
+              label = "Database data")
+          ),
           uiOutput("confirmInsert")),
         
         tabPanel("Data",
