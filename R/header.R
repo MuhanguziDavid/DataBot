@@ -11,3 +11,12 @@ menu<-dropdownMenu(type = "tasks", badgeStatus = "success",
              )
 )
 header <- dashboardHeader(title = "DataBot",menu)
+#header <- dashboardHeader(title = "DataBot",menu,
+    # Set height of dashboardHeader
+ #   tags$li(class = "dropdown",
+  #          tags$style(".main-header {max-height: 20px}"),
+   #         tags$style(".main-header .logo {height: 20px;}"),
+    #        tags$style(".sidebar-toggle {height: 20px; padding-top: 1px !important;}"),
+     #       tags$style(".navbar {min-height:20px !important}")
+    #) 
+  #)

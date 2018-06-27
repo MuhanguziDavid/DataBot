@@ -16,4 +16,5 @@ source("createAccount.R")
 source("renderVisualisation.R")
 source("predictions.R")
 
-dashboardPage(header, sidebar, body)
+dashboardPage(skin = "black",header,sidebar, body)
+
